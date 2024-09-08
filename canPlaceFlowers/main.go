@@ -6,57 +6,30 @@ import (
 
 func main() {
 
-	fmt.Printf("%v", canPlaceFlowers([]int{0, 0, 1, 0, 0}, 1))
+	fmt.Printf("%v", canPlaceFlowers([]int{0, 0, 1, 0, 0}, 3))
 	//	math.Pow(2, 10)
 }
 
 func canPlaceFlowers(flowerbed []int, n int) bool {
-	flag := false
+	for i := 0; i < len(flowerbed); i++ {
+		if flowerbed[i] == 0 {
+			// Checking if left plot is empty or out of bounds
+			left := (i == 0) || (flowerbed[i-1] == 0)
+			// Checking if right plot is empty or out of bounds
+			right := (i == len(flowerbed)-1) || (flowerbed[i+1] == 0)
 
-	length := len(flowerbed)
-	if n == 0 {
-		return true
-	} else {
-		if length == 1 && flowerbed[0] == 0 && n == 1 {
-			return true
-		} else if length == 1 && flowerbed[0] == 1 && n == 1 {
-			return false
+			// If both left and right are empty, plant a flower
+			if left && right {
+				flowerbed[i] = 1
+				n--
+				// If no more flowers need to be planted, return true
+				if n == 0 {
+					return true
+				}
+			}
 		}
 	}
-
-	if len(flowerbed) > 1 {
-
-		for i := 0; i < len(flowerbed); {
-			if n == 0 {
-				break
-			}
-
-			if i == len(flowerbed)-1 && flowerbed[i] == 0 && flowerbed[i-1] == 0 {
-				n--
-				flowerbed[i] = 1
-				flag = true
-				break
-			}
-
-			if flowerbed[i] == 1 {
-				i += 2
-				continue
-			} else if flowerbed[i+1] == 0 {
-				n--
-				flowerbed[i] = 1
-				flag = true
-				i += 2
-			} else {
-				i++
-			}
-
-		}
-	}
-
-	if n == 0 {
-		return flag
-	} else {
-		return false
-	}
+	// If after the loop there are still flowers to plant, return false
+	return n <= 0
 
 }
